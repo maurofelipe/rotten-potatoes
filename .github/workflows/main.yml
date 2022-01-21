@@ -33,6 +33,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
+      - name: Install oci-cli
+        uses: bytesbay/oci-cli-action@v1.0.2
+        with:
+          user: "${{ secrets.OCI_USER }}"
+          fingerprint: "${{ secrets.OCI_FINGERPRINT }}"
+          tenancy: "${{ secrets.OCI_TENANCY }}"
+          region: "${{ secrets.OCI_REGION }}"
+          api_key: |
+            ${{ secrets.OCI_API_KEY }}
+          verbose: true
+      
       - name: Kubernetes Set Context
         uses: Azure/k8s-set-context@v2
         with:
@@ -41,4 +52,5 @@ jobs:
       - name: Deploy to Kubernetes cluster
         uses: Azure/k8s-deploy@v1.5
         with:
-          manifests: k8s/deployment.yaml
+          manifests: |
+            k8s/deployment.yaml
