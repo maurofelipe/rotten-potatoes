@@ -1,4 +1,5 @@
-name: CI
+name: CI-CD
+
 on:
   push:
     branches: [ main ]
@@ -7,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  CI:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,3 +26,13 @@ jobs:
           file: ./src/Dockerfile
           push: true
           tags: maurofelipe/rotten-potatoes:latest
+
+  CD:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Kubernetes Set Context
+        uses: Azure/k8s-set-context@v2
+        with:
+          kubeconfig: ${{ secrets.K8S_KUBECONFIG }}
